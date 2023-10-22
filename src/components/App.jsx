@@ -1,31 +1,40 @@
-import { useEffect, useState } from 'react';
 import { ContactForm } from './ContactForm/ContactForm';
 import { nanoid } from 'nanoid';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  addContacts,
+  deleteContacts,
+  filterContacts,
+} from 'redux/ContactsSlice';
 
 export const App = () => {
-  const [contacts, setContacts] = useState([
-    // { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-    // { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-    // { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-    // { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  ]);
-  const [filter, setFilter] = useState('');
+  const dispatch = useDispatch();
+  const contacts = useSelector(state => state.contacts.contacts);
+  const filter = useSelector(state => state.contacts.filter);
 
-  useEffect(() => {
-    const stringifiedContacts = localStorage.getItem('contacts');
-    if (!stringifiedContacts) return;
-    const parsedContacts = JSON.parse(stringifiedContacts) ?? [];
-    if (parsedContacts.length > 0) {
-      setContacts(parsedContacts);
-    }
-  }, []);
+  // const [contacts, setContacts] = useState([
+  //   { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+  //   { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+  //   { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+  //   { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+  // ]);
+  // const [filter, setFilter] = useState('');
 
-  useEffect(() => {
-    const stringifiedContacts = JSON.stringify(contacts);
-    localStorage.setItem('contacts', stringifiedContacts);
-  }, [contacts]);
+  // useEffect(() => {
+  //   const stringifiedContacts = localStorage.getItem('contacts');
+  //   if (!stringifiedContacts) return;
+  //   const parsedContacts = JSON.parse(stringifiedContacts) ?? [];
+  //   if (parsedContacts.length > 0) {
+  //     setContacts(parsedContacts);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   const stringifiedContacts = JSON.stringify(contacts);
+  //   localStorage.setItem('contacts', stringifiedContacts);
+  // }, [contacts]);
 
   const addNewContact = data => {
     const newContact = {
@@ -34,11 +43,12 @@ export const App = () => {
     };
     contacts.some(({ name }) => name === data.name)
       ? alert(`${data.name} is already in contacts`)
-      : setContacts(prevContacts => [...prevContacts, newContact]);
+      : dispatch(addContacts(newContact));
   };
 
-  const handleFilterContacts = e => {
-    setFilter(e.target.value);
+  const handleFilterContacts = filter => {
+    dispatch(filterContacts(filter));
+    // setFilter(e.target.value);
   };
 
   const getFilterContacts = () => {
@@ -49,9 +59,7 @@ export const App = () => {
   };
 
   const onDeleteContact = contactId => {
-    setContacts(prevContacts =>
-      prevContacts.filter(({ id }) => id !== contactId)
-    );
+    dispatch(deleteContacts(contactId));
   };
 
   return (
