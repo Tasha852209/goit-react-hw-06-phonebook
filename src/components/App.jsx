@@ -14,28 +14,6 @@ export const App = () => {
   const contacts = useSelector(state => state.contacts.contacts);
   const filter = useSelector(state => state.contacts.filter);
 
-  // const [contacts, setContacts] = useState([
-  //   { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  //   { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  //   { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  //   { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-  // ]);
-  // const [filter, setFilter] = useState('');
-
-  // useEffect(() => {
-  //   const stringifiedContacts = localStorage.getItem('contacts');
-  //   if (!stringifiedContacts) return;
-  //   const parsedContacts = JSON.parse(stringifiedContacts) ?? [];
-  //   if (parsedContacts.length > 0) {
-  //     setContacts(parsedContacts);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   const stringifiedContacts = JSON.stringify(contacts);
-  //   localStorage.setItem('contacts', stringifiedContacts);
-  // }, [contacts]);
-
   const addNewContact = data => {
     const newContact = {
       id: nanoid(),
@@ -46,9 +24,8 @@ export const App = () => {
       : dispatch(addContacts(newContact));
   };
 
-  const handleFilterContacts = filter => {
-    dispatch(filterContacts(filter));
-    // setFilter(e.target.value);
+  const handleFilterContacts = filteredValue => {
+    dispatch(filterContacts(filteredValue));
   };
 
   const getFilterContacts = () => {
